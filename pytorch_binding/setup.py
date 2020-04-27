@@ -1,3 +1,4 @@
+from distutils.version import LooseVersion
 import os
 import platform
 import shutil
@@ -8,7 +9,11 @@ from subprocess import Popen, PIPE
 from torch.utils.cpp_extension import BuildExtension, CppExtension
 import torch
 
-extra_compile_args = ['-std=c++11', '-fPIC']
+extra_compile_args = ['-fPIC']
+if LooseVersion(torch.__version__) >= LooseVersion("1.5.0"):
+    extra_compile_args += ['-std=c++14']
+else:
+    extra_compile_args += ['-std=c++11']
 warp_ctc_build_path = "../build"
 
 if platform.system() == 'Darwin':
